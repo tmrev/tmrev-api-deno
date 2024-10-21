@@ -9,6 +9,7 @@
     "npm:@nestjs/core@^10.4.5": "10.4.5_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_reflect-metadata@0.2.2_rxjs@7.8.1_class-transformer@0.5.1_class-validator@0.14.1",
     "npm:@nestjs/mongoose@^10.0.10": "10.0.10_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_@nestjs+core@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__reflect-metadata@0.2.2__rxjs@7.8.1__class-transformer@0.5.1__class-validator@0.14.1_mongoose@8.7.2_rxjs@7.8.1_class-transformer@0.5.1_class-validator@0.14.1",
     "npm:@nestjs/platform-express@^10.4.5": "10.4.5_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_@nestjs+core@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__reflect-metadata@0.2.2__rxjs@7.8.1__class-transformer@0.5.1__class-validator@0.14.1_class-transformer@0.5.1_class-validator@0.14.1",
+    "npm:@nestjs/swagger@^7.4.2": "7.4.2_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_@nestjs+core@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__reflect-metadata@0.2.2__rxjs@7.8.1__class-transformer@0.5.1__class-validator@0.14.1_class-transformer@0.5.1_class-validator@0.14.1_reflect-metadata@0.2.2_@nestjs+platform-express@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__@nestjs+core@10.4.5___@nestjs+common@10.4.5____class-transformer@0.5.1____class-validator@0.14.1____reflect-metadata@0.2.2____rxjs@7.8.1___reflect-metadata@0.2.2___rxjs@7.8.1___class-transformer@0.5.1___class-validator@0.14.1__class-transformer@0.5.1__class-validator@0.14.1",
     "npm:class-transformer@~0.5.1": "0.5.1",
     "npm:class-validator@~0.14.1": "0.14.1",
     "npm:firebase-admin@^12.6.0": "12.6.0",
@@ -156,6 +157,9 @@
     "@lukeed/csprng@1.1.0": {
       "integrity": "sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA=="
     },
+    "@microsoft/tsdoc@0.15.0": {
+      "integrity": "sha512-HZpPoABogPvjeJOdzCOSJsXeL/SMCBgBZMVC3X3d7YYp2gf31MfxhUoYUNwf1ERPJOnQc0wkFn9trqI6ZEdZuA=="
+    },
     "@mongodb-js/saslprep@1.1.9": {
       "integrity": "sha512-tVkljjeEaAhCqTzajSdgbQ6gE6f3oneVwa3iXR6csiEwXXOFsiC6Uh9iAjAhXPtqa/XMDHWjjeNH/77m/Yq2dw==",
       "dependencies": [
@@ -213,6 +217,15 @@
         "uid"
       ]
     },
+    "@nestjs/mapped-types@2.0.5_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_class-transformer@0.5.1_class-validator@0.14.1_reflect-metadata@0.2.2": {
+      "integrity": "sha512-bSJv4pd6EY99NX9CjBIyn4TVDoSit82DUZlL4I3bqNfy5Gt+gXTa86i3I/i0iIV9P4hntcGM5GyO+FhZAhxtyg==",
+      "dependencies": [
+        "@nestjs/common",
+        "class-transformer",
+        "class-validator",
+        "reflect-metadata"
+      ]
+    },
     "@nestjs/mongoose@10.0.10_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_@nestjs+core@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__reflect-metadata@0.2.2__rxjs@7.8.1__class-transformer@0.5.1__class-validator@0.14.1_mongoose@8.7.2_rxjs@7.8.1_class-transformer@0.5.1_class-validator@0.14.1": {
       "integrity": "sha512-3Ff60ock8nwlAJC823TG91Qy+Qc6av+ddIb6n6wlFsTK0akDF/aTcagX8cF8uI8mWxCWjEwEsgv99vo6p0yJ+w==",
       "dependencies": [
@@ -232,6 +245,22 @@
         "express",
         "multer",
         "tslib"
+      ]
+    },
+    "@nestjs/swagger@7.4.2_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_@nestjs+core@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__reflect-metadata@0.2.2__rxjs@7.8.1__class-transformer@0.5.1__class-validator@0.14.1_class-transformer@0.5.1_class-validator@0.14.1_reflect-metadata@0.2.2_@nestjs+platform-express@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__@nestjs+core@10.4.5___@nestjs+common@10.4.5____class-transformer@0.5.1____class-validator@0.14.1____reflect-metadata@0.2.2____rxjs@7.8.1___reflect-metadata@0.2.2___rxjs@7.8.1___class-transformer@0.5.1___class-validator@0.14.1__class-transformer@0.5.1__class-validator@0.14.1": {
+      "integrity": "sha512-Mu6TEn1M/owIvAx2B4DUQObQXqo2028R2s9rSZ/hJEgBK95+doTwS0DjmVA2wTeZTyVtXOoN7CsoM5pONBzvKQ==",
+      "dependencies": [
+        "@microsoft/tsdoc",
+        "@nestjs/common",
+        "@nestjs/core@10.4.5_@nestjs+common@10.4.5__class-transformer@0.5.1__class-validator@0.14.1__reflect-metadata@0.2.2__rxjs@7.8.1_reflect-metadata@0.2.2_rxjs@7.8.1_class-transformer@0.5.1_class-validator@0.14.1_@nestjs+platform-express@10.4.5__@nestjs+common@10.4.5___class-transformer@0.5.1___class-validator@0.14.1___reflect-metadata@0.2.2___rxjs@7.8.1__@nestjs+core@10.4.5___@nestjs+common@10.4.5____class-transformer@0.5.1____class-validator@0.14.1____reflect-metadata@0.2.2____rxjs@7.8.1___reflect-metadata@0.2.2___rxjs@7.8.1___class-transformer@0.5.1___class-validator@0.14.1__class-transformer@0.5.1__class-validator@0.14.1",
+        "@nestjs/mapped-types",
+        "class-transformer",
+        "class-validator",
+        "js-yaml",
+        "lodash",
+        "path-to-regexp@3.3.0",
+        "reflect-metadata",
+        "swagger-ui-dist"
       ]
     },
     "@nuxtjs/opencollective@0.3.2": {
@@ -424,6 +453,9 @@
     },
     "append-field@1.0.0": {
       "integrity": "sha512-klpgFSWLW1ZEs8svjfb7g4qWY0YS5imI82dTg+QahUvJ8YqAY0P10Uk8tTyh9ZGuYEZEMaeJYCF5BFuX552hsw=="
+    },
+    "argparse@2.0.1": {
+      "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
     },
     "array-flatten@1.1.1": {
       "integrity": "sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg=="
@@ -924,6 +956,12 @@
     "jose@4.15.9": {
       "integrity": "sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA=="
     },
+    "js-yaml@4.1.0": {
+      "integrity": "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==",
+      "dependencies": [
+        "argparse"
+      ]
+    },
     "json-bigint@1.0.0": {
       "integrity": "sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==",
       "dependencies": [
@@ -1394,6 +1432,9 @@
         "has-flag"
       ]
     },
+    "swagger-ui-dist@5.17.14": {
+      "integrity": "sha512-CVbSfaLpstV65OnSjbXfVd6Sta3q3F7Cj/yYuvHMp1P90LztOLs6PfUnKEVAeiIVQt9u2SaPwv0LiH/OyMjHRw=="
+    },
     "teeny-request@9.0.0": {
       "integrity": "sha512-resvxdc6Mgb7YEThw6G6bExlXKkv6+YbuzGg9xuXxSgxJF7Ozs+o8Y9+2R3sArdWdW8nOokoQb1yrpFB0pQK2g==",
       "dependencies": [
@@ -1540,6 +1581,7 @@
       "npm:@nestjs/core@^10.4.5",
       "npm:@nestjs/mongoose@^10.0.10",
       "npm:@nestjs/platform-express@^10.4.5",
+      "npm:@nestjs/swagger@^7.4.2",
       "npm:class-transformer@~0.5.1",
       "npm:class-validator@~0.14.1",
       "npm:firebase-admin@^12.6.0",
