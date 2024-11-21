@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Reviews, type ReviewsDocument } from "../schema/reviews.schema.ts";
 import { Model, type PipelineStage } from "mongoose";
@@ -165,5 +169,45 @@ export class ReviewsService {
     const newReview = new this.reviewModal(payload);
 
     return newReview.save();
+  }
+
+  async updateUserReview(
+    reviewId: string,
+    updatedReview: CreateReviewDTO,
+    authToken: string,
+  ): Promise<ReviewsDocument> {
+    const app = this.admin.setup();
+    const user = await app?.auth().verifyIdToken(authToken);
+
+    if (!user) {
+      throw new NotFoundException("User not found or invalid token");
+    }
+
+    const review = await this.reviewModal.findOne({ _id: reviewId });
+
+    if (!review) {
+      throw new NotFoundException("Review not found");
+    }
+
+    if (review.userId !== user.uid) {
+      throw new ForbiddenException("User not authorized to update this review");
+    }
+
+    const updatedReviewPayload = {
+      ...updatedReview,
+      updatedAt: new Date(),
+    };
+
+    const newReview = await this.reviewModal.findByIdAndUpdate(
+      reviewId,
+      updatedReviewPayload,
+      { new: true },
+    );
+
+    if (!newReview) {
+      throw new NotFoundException("Review not found");
+    }
+
+    return newReview;
   }
 }

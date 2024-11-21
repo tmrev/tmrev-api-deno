@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -27,6 +28,7 @@ import {
   createPrivateReviewExampleObject,
   createPublicReviewExampleObject,
   movieReviewExampleObject,
+  updateReviewExampleObject,
 } from "../swagger/example/reviews.ts";
 
 @ApiTags("Reviews")
@@ -86,11 +88,49 @@ export class ReviewsController {
     const { authToken } = headers;
 
     if (!authToken) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("No authorization token provided");
     }
 
     const result = await this.reviewService.createUserReview(
       createReview,
+      authToken,
+    );
+
+    return result;
+  }
+
+  @Put(":reviewId")
+  @ApiParam({
+    name: "reviewId",
+    description: "The review id",
+    example: "5f9c8d3e3f3e4c001f6d1a3d",
+    type: String,
+  })
+  @ApiBody({
+    type: CreateReviewDTO,
+    description: "The review object",
+    examples: {
+      "updateReview": {
+        summary: "Update Review",
+        description: "Update a review for a movie",
+        value: updateReviewExampleObject,
+      },
+    },
+  })
+  async updateReview(
+    @Param("reviewId") reviewId: string,
+    @Body() updateReview: CreateReviewDTO,
+    @RequestHeader(OptionalAuthDTO) headers: { authToken: string },
+  ) {
+    const { authToken } = headers;
+
+    if (!authToken) {
+      throw new UnauthorizedException("No authorization token provided");
+    }
+
+    const result = await this.reviewService.updateUserReview(
+      reviewId,
+      updateReview,
       authToken,
     );
 

@@ -90,9 +90,19 @@ const createPrivateReviewExampleObject: CreateReviewDTO = {
   reviewedDate: "2024-05-22",
 };
 
+const updateReviewExampleObject: CreateReviewDTO = {
+  title: "updated movie review",
+  notes: "updated movie review notes",
+  tmdbID: 630,
+  advancedScore: reviewAdvancedScoreExampleObject,
+  public: true,
+  reviewedDate: "2024-05-22",
+};
+
 export {
   createPrivateReviewExampleObject,
   createPublicReviewExampleObject,
   movieReviewExampleObject,
   reviewAdvancedScoreExampleObject,
+  updateReviewExampleObject,
 };
