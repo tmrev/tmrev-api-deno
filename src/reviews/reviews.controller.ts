@@ -1,8 +1,15 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { ReviewsService } from "./reviews.service.ts";
 import { RequestHeader } from "../decorator/request-header.decorator.ts";
 import {
-  AuthDTO,
   CreateReviewDTO,
   ExampleReviewResponseDTO,
   OptionalAuthDTO,
@@ -10,13 +17,17 @@ import {
 } from "./dto/review.dto.ts";
 import {
   ApiBearerAuth,
-  ApiHeader,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { movieReviewExampleObject } from "../swagger/example/reviews.ts";
+import {
+  createPrivateReviewExampleObject,
+  createPublicReviewExampleObject,
+  movieReviewExampleObject,
+} from "../swagger/example/reviews.ts";
 
 @ApiTags("Reviews")
 @ApiBearerAuth("authorization")
@@ -30,11 +41,6 @@ export class ReviewsController {
     description: "The firebase user id",
     example: "qnydtrfNxWSKBZrZvLYkvMIY7k72",
     type: String,
-  })
-  @ApiHeader({
-    name: "authorization",
-    description: "Firebase Auth Token",
-    required: false,
   })
   @ApiResponse({
     type: ExampleReviewResponseDTO,
@@ -57,13 +63,35 @@ export class ReviewsController {
   }
 
   @Post()
+  @ApiBody({
+    type: CreateReviewDTO,
+    description: "The review object",
+    examples: {
+      "publicReview": {
+        summary: "Public Review",
+        description: "Create a review for a movie",
+        value: createPublicReviewExampleObject,
+      },
+      "privateReview": {
+        summary: "Private Review",
+        description: "Create a review for a movie",
+        value: createPrivateReviewExampleObject,
+      },
+    },
+  })
   async createReview(
     @Body() createReview: CreateReviewDTO,
-    @RequestHeader(AuthDTO) headers: { authToken: string },
+    @RequestHeader(OptionalAuthDTO) headers: { authToken: string },
   ) {
+    const { authToken } = headers;
+
+    if (!authToken) {
+      throw new UnauthorizedException();
+    }
+
     const result = await this.reviewService.createUserReview(
       createReview,
-      headers.authToken,
+      authToken,
     );
 
     return result;

@@ -1,3 +1,5 @@
+import type { CreateReviewDTO } from "../../reviews/dto/review.dto.ts";
+
 const movieReviewExampleObject = {
   "pageNumber": 0,
   "pageSize": 1,
@@ -69,4 +71,28 @@ const reviewAdvancedScoreExampleObject = {
   "visuals": 8,
 };
 
-export { movieReviewExampleObject, reviewAdvancedScoreExampleObject };
+const createPublicReviewExampleObject: CreateReviewDTO = {
+  title: "arbustum aestivus repellat careo tepesco",
+  notes:
+    "Desipio animus paulatim molestias. Tremo adulescens comminor accusator cimentarius strues depereo.",
+  tmdbID: 630,
+  advancedScore: reviewAdvancedScoreExampleObject,
+  public: true,
+  reviewedDate: "2024-05-22",
+};
+
+const createPrivateReviewExampleObject: CreateReviewDTO = {
+  title: "private movie review",
+  notes: "private movie review notes",
+  tmdbID: 630,
+  advancedScore: reviewAdvancedScoreExampleObject,
+  public: false,
+  reviewedDate: "2024-05-22",
+};
+
+export {
+  createPrivateReviewExampleObject,
+  createPublicReviewExampleObject,
+  movieReviewExampleObject,
+  reviewAdvancedScoreExampleObject,
+};
