@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Reviews, type ReviewsDocument } from "../schema/reviews.schema.ts";
-import { Model, type PipelineStage } from "mongoose";
+import { Model, type PipelineStage, Types } from "mongoose";
 import { FirebaseAdmin } from "../../config/firebase.setup.ts";
 import { type DecodedIdToken } from "firebase-admin/auth";
 import type {
@@ -141,6 +141,42 @@ export class ReviewsService {
       totalCount,
       reviews,
     };
+  }
+
+  async getReview(
+    reviewId: string,
+    authToken?: string,
+  ): Promise<ReviewsDocument> {
+    const app = this.admin.setup();
+    let user: DecodedIdToken | undefined = undefined;
+    const pipeline: PipelineStage[] = [];
+
+    const _id = new Types.ObjectId(reviewId);
+
+    pipeline.push({
+      $match: {
+        _id,
+      },
+    });
+
+    pipeline.push(...movieDetailsPipeline);
+
+    if (authToken) {
+      user = await app?.auth().verifyIdToken(authToken);
+    }
+
+    const review = await this.reviewModal.aggregate(pipeline);
+
+    if (!review.length) {
+      throw new NotFoundException("Review not found");
+    }
+
+    if (!user && !review[0].public || review[0].userId !== user?.uid) {
+      throw new ForbiddenException("Review is private");
+    }
+
+    // there should only be one review
+    return review[0];
   }
 
   async createUserReview(

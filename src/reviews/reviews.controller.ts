@@ -27,13 +27,14 @@ import {
 import {
   createPrivateReviewExampleObject,
   createPublicReviewExampleObject,
-  movieReviewExampleObject,
+  multipleMovieReviewExampleObject,
+  singleMovieReviewExampleObject,
   updateReviewExampleObject,
 } from "../swagger/example/reviews.ts";
 
 @ApiTags("Reviews")
 @ApiBearerAuth("authorization")
-@Controller("movie/review")
+@Controller("movie")
 export class ReviewsController {
   constructor(private reviewService: ReviewsService) {}
 
@@ -47,9 +48,9 @@ export class ReviewsController {
   @ApiResponse({
     type: ExampleReviewResponseDTO,
     description: "The review object",
-    example: movieReviewExampleObject,
+    example: multipleMovieReviewExampleObject,
   })
-  @Get(":userId")
+  @Get("reviews/:userId")
   async getUserReviews(
     @Param("userId") userId: string,
     @Query() reviewQuery: ReviewQueryDTO,
@@ -64,7 +65,31 @@ export class ReviewsController {
     return result;
   }
 
-  @Post()
+  @Get("review/:reviewId")
+  @ApiParam({
+    name: "reviewId",
+    description: "The review id",
+    example: "5f9c8d3e3f3e4c001f6d1a3d",
+    type: String,
+  })
+  @ApiResponse({
+    type: ExampleReviewResponseDTO,
+    description: "The review object",
+    example: singleMovieReviewExampleObject,
+  })
+  async getReview(
+    @Param("reviewId") reviewId: string,
+    @RequestHeader(OptionalAuthDTO) headers: { authToken: string },
+  ) {
+    const result = await this.reviewService.getReview(
+      reviewId,
+      headers.authToken || undefined,
+    );
+
+    return result;
+  }
+
+  @Post("/review")
   @ApiBody({
     type: CreateReviewDTO,
     description: "The review object",
@@ -99,7 +124,7 @@ export class ReviewsController {
     return result;
   }
 
-  @Put(":reviewId")
+  @Put("review/:reviewId")
   @ApiParam({
     name: "reviewId",
     description: "The review id",
