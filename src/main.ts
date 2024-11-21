@@ -18,6 +18,10 @@ async function bootstrap() {
     .setTitle("The Movie Review API")
     .setDescription("API for the TMREV app")
     .setVersion("1.0")
+    .addApiKey({
+      type: "apiKey",
+      name: "authorization",
+    }, "authorization")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, documentFactory);

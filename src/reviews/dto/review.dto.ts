@@ -4,17 +4,42 @@ import {
   IsDefined,
   IsNotEmptyObject,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform, Type } from "class-transformer";
+import { reviewAdvancedScoreExampleObject } from "../../swagger/example/reviews.ts";
+
+export class OptionalAuthDTO {
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: "Firebase Auth Token",
+    name: "authorization",
+    required: false,
+  })
+  @Expose({ name: "authorization" })
+  readonly authToken?: string;
+}
 
 export class AuthDTO {
   @IsString()
   @IsDefined()
   @Expose({ name: "authorization" })
   readonly authToken!: string;
+}
+
+export class AdvancedScoreQueryDTO {
+  @IsString()
+  @IsDefined()
+  category?: string;
+
+  @IsNumber()
+  @IsDefined()
+  score!: number;
 }
 
 export class AdvancedScoreDTO {
@@ -207,4 +232,106 @@ export class CreateReviewDTO {
   @IsDateString({ "strictSeparator": true })
   @ApiProperty()
   readonly reviewedDate!: string;
+}
+
+export class ReviewQueryDTO {
+  @IsNumber()
+  @IsDefined()
+  @Transform(({ value }) => +value)
+  @ApiProperty({
+    type: Number,
+    description: "The page number starts at 0",
+    example: 0,
+  })
+  readonly pageNumber!: number;
+
+  @IsNumber()
+  @IsDefined()
+  @Transform(({ value }) => +value)
+  @ApiProperty({
+    type: Number,
+    description: "The number of reviews per page",
+    example: 10,
+  })
+  readonly pageSize!: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: "Genre of movie to filter by separated by commas",
+    example: "Action",
+    required: false,
+  })
+  readonly genre?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AdvancedScoreQueryDTO)
+  @ApiProperty({
+    type: AdvancedScoreQueryDTO,
+    description: "User score review",
+    example: reviewAdvancedScoreExampleObject,
+    required: false,
+  })
+  readonly advancedScore?: AdvancedScoreQueryDTO;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    type: String,
+    description: "Search text; searches title and notes",
+    required: false,
+  })
+  readonly textSearch?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: "averagedAdvancedScore.desc",
+  })
+  readonly sort_by?: string;
+}
+
+export class ReviewResponseDTO {
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    description: "The total number of pages",
+    example: 1,
+  })
+  public totalNumberOfPages!: number;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    description: "The current page number starts at 0",
+    example: 0,
+  })
+  public pageNumber!: number;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    description: "The number of reviews per page",
+    example: 10,
+  })
+  public pageSize!: number;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    description: "The total number of reviews",
+    example: 1,
+  })
+  public totalCount!: number;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => ExampleReviewResponseDTO)
+  @ApiProperty()
+  public reviews!: ExampleReviewResponseDTO[];
 }
