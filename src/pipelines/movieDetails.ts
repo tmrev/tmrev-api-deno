@@ -30,6 +30,7 @@ const movieDetailsProjection = {
 
 const movieDetailsProjectionWithCast = {
   movieDetails: {
+    ...movieDetailsProjection.movieDetails,
     credits: 1,
   },
 };
@@ -54,8 +55,35 @@ const movieDetailsPipeline = [
   },
 ];
 
+const variableMovieDetailsPipeline = (
+  shouldIncludeCredits: boolean = false,
+) => {
+  return [
+    ...movieDetailsLookUp,
+    {
+      $project: {
+        _id: 1,
+        userId: 1,
+        tmdbID: 1,
+        title: 1,
+        notes: 1,
+        public: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        averagedAdvancedScore: 1,
+        advancedScore: 1,
+        reviewedDate: 1,
+        ...shouldIncludeCredits
+          ? movieDetailsProjectionWithCast
+          : movieDetailsProjection,
+      },
+    },
+  ];
+};
+
 export {
   movieDetailsLookUp,
   movieDetailsPipeline,
   movieDetailsProjectionWithCast,
+  variableMovieDetailsPipeline,
 };
