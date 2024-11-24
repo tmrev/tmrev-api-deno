@@ -126,8 +126,6 @@ export class ReviewsService {
       $count: "totalCount",
     });
 
-    console.log(pipeline);
-
     const reviews = await this.reviewModal.aggregate(pipeline);
     const countResult = await this.reviewModal.aggregate(countPipeline);
     const totalCount = countResult[0]?.totalCount || 0;
