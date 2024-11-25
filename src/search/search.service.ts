@@ -34,118 +34,52 @@ export class SearchService {
     // lookup the movie details for the review
     pipeline.push(...variableMovieDetailsPipeline(!!searchQuery.withCast));
 
-    if (searchQuery.userId) {
-      pipeline.push({
-        $match: {
-          userId: searchQuery.userId,
-        },
-      });
+    const matchConditions: { [key: string]: any } = {
+      userId: searchQuery.userId,
+      tmdbID: searchQuery.tmdbID,
+      "movieDetails.revenue": {
+        $lte: searchQuery.maxRevenue,
+        $gte: searchQuery.minRevenue,
+      },
+      "movieDetails.budget": {
+        $lte: searchQuery.maxBudget,
+        $gte: searchQuery.minBudget,
+      },
+      "movieDetails.runtime": {
+        $lte: searchQuery.maxRuntime,
+        $gte: searchQuery.minRuntime,
+      },
+      reviewedDate: {
+        $gte: searchQuery.reviewDateGte,
+        $lte: searchQuery.reviewDateLte,
+      },
+    };
+
+    for (const [key, value] of Object.entries(matchConditions)) {
+      if (value !== undefined && value !== null) {
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const subConditions = Object.entries(value).filter(([_, v]) =>
+            v !== undefined && v !== null
+          );
+          if (subConditions.length > 0) {
+            pipeline.push({
+              $match: { [key]: Object.fromEntries(subConditions) },
+            });
+          }
+        } else {
+          pipeline.push({ $match: { [key]: value } });
+        }
+      }
     }
 
     if (searchQuery.userId && !user) {
-      pipeline.push({
-        $match: {
-          public: true,
-        },
-      });
+      pipeline.push({ $match: { public: true } });
     }
 
     if (searchQuery.withCast) {
       const cast = searchQuery.withCast.split(",").map((actor) => +actor);
       pipeline.push({
-        $match: {
-          "movieDetails.credits.cast.id": {
-            $in: cast,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.tmdbID) {
-      pipeline.push({
-        $match: {
-          tmdbID: searchQuery.tmdbID,
-        },
-      });
-    }
-
-    if (searchQuery.maxRevenue) {
-      pipeline.push({
-        $match: {
-          "movieDetails.revenue": {
-            $lte: searchQuery.maxRevenue,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.minRevenue) {
-      pipeline.push({
-        $match: {
-          "movieDetails.revenue": {
-            $gte: searchQuery.minRevenue,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.maxBudget) {
-      pipeline.push({
-        $match: {
-          "movieDetails.budget": {
-            $lte: searchQuery.maxBudget,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.minBudget) {
-      pipeline.push({
-        $match: {
-          "movieDetails.budget": {
-            $gte: searchQuery.minBudget,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.maxRuntime) {
-      pipeline.push({
-        $match: {
-          "movieDetails.runtime": {
-            $lte: searchQuery.maxRuntime,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.minRuntime) {
-      pipeline.push({
-        $match: {
-          "movieDetails.runtime": {
-            $gte: searchQuery.minRuntime,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.reviewDateGte) {
-      pipeline.push({
-        $match: {
-          reviewedDate: {
-            $gte: searchQuery.reviewDateGte,
-          },
-        },
-      });
-    }
-
-    if (searchQuery.reviewDateLte) {
-      pipeline.push({
-        $match: {
-          reviewedDate: {
-            $lte: searchQuery.reviewDateLte,
-          },
-        },
+        $match: { "movieDetails.credits.cast.id": { $in: cast } },
       });
     }
 
@@ -154,49 +88,27 @@ export class SearchService {
         capitalizeFirstLetter(genre.trim())
       );
       pipeline.push({
-        $match: {
-          "movieDetails.genres.name": {
-            $in: genres,
-          },
-        },
+        $match: { "movieDetails.genres.name": { $in: genres } },
       });
     }
 
     if (searchQuery.sort_by) {
       const [name, order, category] = searchQuery.sort_by.split(".");
-
-      if (category) {
-        pipeline.push({
-          $sort: {
-            [`${category}.${name}`]: convertSortOrder(order),
-          },
-        });
-      } else {
-        pipeline.push({
-          $sort: {
-            [name]: convertSortOrder(order),
-          },
-        });
-      }
+      const sortField = category ? `${category}.${name}` : name;
+      pipeline.push({ $sort: { [sortField]: convertSortOrder(order) } });
     }
 
-    pipeline.push({
-      $unset: "movieDetails.credits",
-    });
+    // remove the cast from the movie details, cause the request to be large
+    pipeline.push({ $unset: "movieDetails.credits" });
 
     const countPipeline = [...pipeline];
 
-    pipeline.push({
-      $skip: searchQuery.pageNumber * searchQuery.pageSize,
-    });
+    pipeline.push({ $skip: searchQuery.pageNumber * searchQuery.pageSize });
+    pipeline.push({ $limit: searchQuery.pageSize });
 
-    pipeline.push({
-      $limit: searchQuery.pageSize,
-    });
+    countPipeline.push({ $count: "totalCount" });
 
-    countPipeline.push({
-      $count: "totalCount",
-    });
+    console.dir(pipeline, { depth: null });
 
     const reviews = await this.reviewModal.aggregate(pipeline);
     const countResult = await this.reviewModal.aggregate(countPipeline);
