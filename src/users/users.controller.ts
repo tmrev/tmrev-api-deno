@@ -7,13 +7,13 @@ import {
   Put,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserService } from "./user.service.ts";
+import { UsersService } from "./users.service.ts";
 
 @ApiTags("User")
 @ApiBearerAuth("authorization")
 @Controller("user")
-export class UserController {
-  constructor(private userService: UserService) {}
+export class UsersController {
+  constructor(private userService: UsersService) {}
 
   @Post("/")
   async createUser() {
