@@ -108,8 +108,6 @@ export class SearchService {
 
     countPipeline.push({ $count: "totalCount" });
 
-    console.dir(pipeline, { depth: null });
-
     const reviews = await this.reviewModal.aggregate(pipeline);
     const countResult = await this.reviewModal.aggregate(countPipeline);
     const totalCount = countResult[0]?.totalCount || 0;
